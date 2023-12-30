@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amritvin's Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Your existing styles go here */
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .update-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .update-item {
+            background-color: #ffffff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .update-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .update-source {
+            color: #888888;
+            margin-bottom: 10px;
+        }
+
+        .update-description {
+            color: #555555;
+            margin-bottom: 10px;
+        }
+
+        .update-thumbnail {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .read-more-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .read-more-link:hover {
+            text-decoration: underline;
+        }
+
+        .update-time {
+            color: #888888;
+        }
+
+        .force-update-btn {
+            margin-bottom: 20px;
+            width: 30%
+            text-align: center;
+            border-radius: 50px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #28a745;
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .force-update-btn svg {
+            width: 10px;
+            height: 20px;
+            fill: white;
+            margin-right: 10px;
+        }
+
+        .chat-container {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .chat-content {
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #dddddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">Amritvin's Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-success force-update-btn"
+                    onclick="window.location.href='{{ url_for('force_update_route') }}'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path
+                            d="M16 7v2h-1.543c-.063.659-.233 1.487-.546 2.511-.322 1.05-.786 2.193-1.387 3.351-1.263 2.003-3.018 3.553-5.045 4.442-2.284.952-4.882 1.142-7.116.506-1.36-.421-2.532-1.197-3.54-2.2L.5 15.5V11h4l-1.307 1.306c.68.68 1.487 1.244 2.354 1.645 2.316.71 4.993.546 7.22-.572 1.37-.543 2.54-1.366 3.49-2.468.724-.782 1.28-1.686 1.623-2.682H16z" />
+                    </svg>
+                    Force Update
+                </button>
+            </div>
+        </div>
+
+        <h1 class="mt-3">Amritvin's Dashboard</h1>
+        <p class="mb-4">Last Updated: {{ last_updated_time }}</p>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Latest Updates</h2>
+                <ul class="update-list">
+                    {% for entry in updates %}
+                    <li class="update-item">
+                        <p class="update-title">{{ entry.title }}</p>
+                        <p class="update-source">Source: {{ entry.source }}</p>
+                        {% if entry.thumbnail %}
+                        <img class="update-thumbnail mb-2" src="{{ entry.thumbnail }}" alt="Thumbnail">
+                        {% endif %}
+                        <p class="update-description">{{ entry.description }}</p>
+                        <p class="update-time">{{ entry.published }}</p>
+                        <a class="read-more-link" href="{{ entry.link }}" target="_blank">Read more</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="mb-3">Update RSS Feed</h2>
+                <form method="post" action="{{ url_for('update_feeds') }}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="new_feed" placeholder="Enter RSS feed URL">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Feed</button>
+                </form>
+
+                <h2 class="mt-4">Source Information</h2>
+                <ul class="list-group">
+                    {% for source, info in source_info.items() %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ source }}
+                        <span class="badge badge-primary badge-pill">{{ info.count }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Last Update
+                        <span class="badge badge-secondary badge-pill">{{ info.last_update }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Chatbot container -->
+		<div class="chat-container" id="chat-container">
+			<div class="chat-header" onclick="toggleChat()">Chatbot</div>
+			<div class="chat-content" id="chat-content"></div>
+			<div class="chat-input">
+				<input type="text" id="user-input" class="form-control" placeholder="Type your message...">
+				<button class="btn btn-primary" onclick="sendMessage()">Send</button>
+			</div>
+		</div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    var chatContainer = document.getElementById('chat-container');
+    var chatContent = document.getElementById('chat-content');
+
+    function toggleChat() {
+        chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function sendMessage() {
+        var userInput = document.getElementById('user-input').value;
+        var userMessage = document.createElement('p');
+        userMessage.innerText = 'You: ' + userInput;
+        chatContent.appendChild(userMessage);
+        var botMessage = document.createElement('p');
+        botMessage.innerText = 'Bot: Hi there! How can I assist you?';
+        chatContent.appendChild(botMessage);
+        document.getElementById('user-input').value = '';
+    }
+</script>
+</body>
+
+</html>
