@@ -121,4 +121,4 @@ if __name__ == "__main__":
     schedule_updates()
 
     # Start the Flask app
-    app.run(host="192.168.1.11",debug=True,threaded=True)
+    app.run(debug=True,threaded=True)
