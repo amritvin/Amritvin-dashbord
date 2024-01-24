@@ -11,7 +11,7 @@ app = Flask(__name__)
 rss_feeds = [
     "https://krebsonsecurity.com/feed/",
     "https://feeds.feedburner.com/TheHackersNews",
-    "https://www.mcafee.com/blogs/feed/","https://www.bleepingcomputer.com/feed/","https://blog.malwarebytes.com/feed/","https://cyble.com/blog/feed/","https://www.sentinelone.com/feed/","https://www.bitdefender.com/blog/api/rss/labs/","https://any.run/cybersecurity-blog/category/malware-analysis/feed/"
+    "https://www.mcafee.com/blogs/feed/","https://www.bleepingcomputer.com/feed/","https://blog.malwarebytes.com/feed/","https://cyble.com/blog/feed/","https://www.sentinelone.com/feed/","https://www.bitdefender.com/blog/api/rss/labs/","https://any.run/cybersecurity-blog/category/malware-analysis/feed/","https://russianpanda.com/feed.xml","https://www.securityweek.com/feed/","https://securityscorecard.com/blog/feed/","https://securityaffairs.com/feed","https://www.webroot.com/blog/feed/"
     # Add more feed URLs as needed
 ]
 
